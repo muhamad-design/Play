@@ -3,7 +3,7 @@
 Clean-room study of how the Paper desktop app (`~/paper-target`, Electron, `app.asar`) exposes
 its canvas to AI agents over MCP. Behaviour only: nothing from Paper is copied into this
 repository. Raw material (REA output, recovered sources, the public tool config) stays in
-`analysis/raw/`, which is gitignored. The paper-rs implementation (`src/mcp/`) was written
+`analysis/raw/`, which is gitignored. The Play implementation (`src/mcp/`) was written
 from these notes.
 
 Sources:
@@ -94,7 +94,7 @@ are opaque strings. Annotations: read tools are `readOnlyHint`, writes `destruct
 | `create_page` | `name?` | New page; returns `pageId`. |
 | `rename_pages` | `updates[{pageId,name}]` | Batch page renames. |
 | `get_basic_info` | `pageId?` | File name, page, node count, artboards with sizes and world positions, fonts used, tokens, `pages[]` with `isActive`. |
-| `get_selection` | – | Selected nodes: id, name, component type, size, artboard. |
+| `get_selection` | - | Selected nodes: id, name, component type, size, artboard. |
 | `get_node_info` | `nodeId` | Size, visibility, lock, parent, children ids, text, `x/y` (parent) and `worldX/worldY`. |
 | `get_children` | `nodeId` | Direct children with id, name, type, child count, positions. |
 | `get_tree_summary` | `nodeId`, `depth?` (3, max 10) | Indented text tree: type, name, id, size. |
@@ -136,9 +136,9 @@ artboards when content clips; never show raw node ids; call `finish_working_on_n
 * Positions: `x/y` are relative to the parent, `worldX/worldY` absolute; both `null` when the
   value depends on flex layout that hasn't been measured (inactive page).
 
-## 4. Mapping to paper-rs
+## 4. Mapping to Play
 
-| Paper | paper-rs |
+| Paper | Play |
 |---|---|
 | file (`fileId`) | project (manifest id, or folder path); the open project is "the file the user is viewing" |
 | page (`pageId`) | page (`PageRef.id`); edits on parked pages go to that page's own document and undo history |
@@ -154,5 +154,5 @@ artboards when content clips; never show raw node ids; call `finish_working_on_n
 Not carried over (no equivalent in a local-first single-user app): comments, design tokens,
 teams/folders/drafts, AI image generation (`paper-gen://`), video export, the per-agent
 "working" indicator (kept as a harmless no-op tool so agent prompts written for Paper work).
-Added for paper-rs: whiteboard shapes and hand-drawn style (`create_shape`, Excalidraw keys
+Added for Play: whiteboard shapes and hand-drawn style (`create_shape`, Excalidraw keys
 in `update_styles`), `undo`/`redo`, and page/project listing.

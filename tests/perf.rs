@@ -4,11 +4,11 @@
 mod common;
 
 use common::*;
-use paper_rs::editor::Editor;
-use paper_rs::geom::{Rect, V2, v2};
-use paper_rs::model::{Color, Node, NodeId, NodeKind};
-use paper_rs::render::gpu::{CanvasRenderer, OFFSCREEN_FORMAT};
-use paper_rs::render::scene::{self, SceneCache};
+use play::editor::Editor;
+use play::geom::{Rect, V2, v2};
+use play::model::{Color, Node, NodeId, NodeKind};
+use play::render::gpu::{CanvasRenderer, OFFSCREEN_FORMAT};
+use play::render::scene::{self, SceneCache};
 use std::time::Instant;
 
 pub fn ten_thousand() -> Editor {
@@ -27,7 +27,7 @@ pub fn ten_thousand() -> Editor {
                 text: format!("#{i}"),
                 font_size: 12.0,
                 auto_width: true,
-                align: paper_rs::model::TextAlign::Left,
+                align: play::model::TextAlign::Left,
             },
         };
         let mut n = Node::new(NodeId(0), kind, Rect::new(x, y, 40.0, 40.0));

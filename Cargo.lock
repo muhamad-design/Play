@@ -2512,44 +2512,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "paper-rs"
-version = "0.1.0"
-dependencies = [
- "arboard",
- "axum",
- "bytemuck",
- "dirs",
- "egui",
- "egui-wgpu",
- "egui-winit",
- "env_logger",
- "fastrand",
- "i_overlay",
- "image",
- "log",
- "lyon",
- "miniz_oxide 0.9.1",
- "muda",
- "objc2 0.6.5",
- "objc2-app-kit 0.3.2",
- "objc2-foundation 0.3.2",
- "pollster",
- "raw-window-handle",
- "reqwest",
- "resvg",
- "rfd",
- "rmcp",
- "serde",
- "serde_json",
- "tokio",
- "tokio-util",
- "ttf-parser",
- "usvg",
- "wgpu",
- "winit",
-]
-
-[[package]]
 name = "parking_lot"
 version = "0.12.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2640,6 +2602,44 @@ name = "plain"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4596b6d070b27117e987119b4dac604f3c58cfb0b191112e24771b2faeac1a6"
+
+[[package]]
+name = "play"
+version = "0.1.0"
+dependencies = [
+ "arboard",
+ "axum",
+ "bytemuck",
+ "dirs",
+ "egui",
+ "egui-wgpu",
+ "egui-winit",
+ "env_logger",
+ "fastrand",
+ "i_overlay",
+ "image",
+ "log",
+ "lyon",
+ "miniz_oxide 0.9.1",
+ "muda",
+ "objc2 0.6.5",
+ "objc2-app-kit 0.3.2",
+ "objc2-foundation 0.3.2",
+ "pollster",
+ "raw-window-handle",
+ "reqwest",
+ "resvg",
+ "rfd",
+ "rmcp",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-util",
+ "ttf-parser",
+ "usvg",
+ "wgpu",
+ "winit",
+]
 
 [[package]]
 name = "png"

@@ -1,13 +1,13 @@
-//! The `.paper-rs` document format: versioned, pretty-printed JSON.
+//! The `.play` document format: versioned, pretty-printed JSON.
 
 use crate::geom::Camera;
 use crate::model::{Document, Node, NodeId};
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
-pub const FORMAT: &str = "paper-rs";
+pub const FORMAT: &str = "play";
 pub const VERSION: u32 = 1;
-pub const EXTENSION: &str = "paper-rs";
+pub const EXTENSION: &str = "play";
 
 #[derive(Serialize, Deserialize)]
 struct FileV1 {
@@ -25,7 +25,7 @@ struct FileV1 {
 pub enum FileError {
     Io(std::io::Error),
     Json(serde_json::Error),
-    NotPaperRs,
+    NotPlay,
     UnsupportedVersion(u32),
     Invalid(String),
 }
@@ -35,7 +35,7 @@ impl std::fmt::Display for FileError {
         match self {
             FileError::Io(e) => write!(f, "I/O error: {e}"),
             FileError::Json(e) => write!(f, "malformed file: {e}"),
-            FileError::NotPaperRs => write!(f, "not a .paper-rs document"),
+            FileError::NotPlay => write!(f, "not a .play document"),
             FileError::UnsupportedVersion(v) => {
                 write!(
                     f,
@@ -68,7 +68,7 @@ pub fn from_str(s: &str) -> Result<(Document, Option<Camera>), FileError> {
     use crate::project::format::{FormatError, page_from_json};
     match page_from_json(s) {
         Ok(p) => Ok((p.doc, p.camera)),
-        Err(FormatError::WrongFormat(_)) => Err(FileError::NotPaperRs),
+        Err(FormatError::WrongFormat(_)) => Err(FileError::NotPlay),
         Err(FormatError::TooNew { version, .. }) => Err(FileError::UnsupportedVersion(version)),
         Err(FormatError::Json(e)) => Err(FileError::Json(e)),
         Err(FormatError::Invalid(e)) => Err(FileError::Invalid(e)),
@@ -78,7 +78,7 @@ pub fn from_str(s: &str) -> Result<(Document, Option<Camera>), FileError> {
 
 /// Write atomically (temp file + rename) so a crash never leaves a truncated document.
 pub fn save(path: &Path, doc: &Document, camera: Option<&Camera>) -> Result<(), FileError> {
-    let tmp = path.with_extension("paper-rs.tmp");
+    let tmp = path.with_extension("play.tmp");
     std::fs::write(&tmp, to_string(doc, camera)).map_err(FileError::Io)?;
     std::fs::rename(&tmp, path).map_err(FileError::Io)
 }
@@ -112,26 +112,26 @@ mod tests {
     fn rejects_foreign_and_future_files() {
         assert!(matches!(
             from_str("{\"hello\":1}"),
-            Err(FileError::NotPaperRs)
+            Err(FileError::NotPlay)
         ));
         assert!(matches!(
             from_str("{\"format\":\"x\",\"version\":1}"),
-            Err(FileError::NotPaperRs)
+            Err(FileError::NotPlay)
         ));
         assert!(matches!(
-            from_str("{\"format\":\"paper-rs\",\"version\":99}"),
+            from_str("{\"format\":\"play\",\"version\":99}"),
             Err(FileError::UnsupportedVersion(99))
         ));
         let broken =
-            r#"{"format":"paper-rs","version":1,"name":"x","next_id":1,"root":[5],"nodes":[]}"#;
+            r#"{"format":"play","version":1,"name":"x","next_id":1,"root":[5],"nodes":[]}"#;
         assert!(matches!(from_str(broken), Err(FileError::Invalid(_))));
     }
 
     #[test]
     fn save_and_load_file() {
-        let dir = std::env::temp_dir().join(format!("paper-rs-test-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("play-test-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
-        let path = dir.join("doc.paper-rs");
+        let path = dir.join("doc.play");
         let ed = demo::showcase();
         save(&path, &ed.doc, None).unwrap();
         let (doc, cam) = load(&path).unwrap();

@@ -1,7 +1,7 @@
 //! MCP server: AI agents read and edit the canvas of the running app.
 //!
 //! Modeled on Paper's MCP server (behaviour notes in `analysis/paper-mcp.md`): the app serves
-//! MCP over streamable HTTP on loopback, and `paper-rs-mcp` bridges stdio clients to it. Tool
+//! MCP over streamable HTTP on loopback, and `play-mcp` bridges stdio clients to it. Tool
 //! calls are handed to the thread that owns the editor, so every change goes through the
 //! normal transaction / undo path and repaints the window.
 //!
@@ -16,13 +16,13 @@ pub mod html;
 pub mod server;
 pub mod tools;
 
-/// Paper uses 29979; paper-rs listens next door so both apps can run side by side.
+/// Paper uses 29979; play listens next door so both apps can run side by side.
 pub const DEFAULT_PORT: u16 = 29_980;
 pub const ENDPOINT: &str = "/mcp";
 
-/// The port to serve on / connect to: `$PAPER_RS_MCP_PORT`, else [`DEFAULT_PORT`].
+/// The port to serve on / connect to: `$PLAY_MCP_PORT`, else [`DEFAULT_PORT`].
 pub fn port() -> u16 {
-    std::env::var("PAPER_RS_MCP_PORT")
+    std::env::var("PLAY_MCP_PORT")
         .ok()
         .and_then(|p| p.trim().parse().ok())
         .unwrap_or(DEFAULT_PORT)

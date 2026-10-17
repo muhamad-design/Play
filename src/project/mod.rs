@@ -1,6 +1,6 @@
 //! Local-first projects.
 //!
-//! Every project is a folder under the store root (`~/Documents/paper-rs/` by default):
+//! Every project is a folder under the store root (`~/Documents/Play Projects/` by default):
 //!
 //! ```text
 //! <root>/<Project name>/
@@ -73,15 +73,15 @@ pub fn folder_name(name: &str) -> String {
 }
 
 impl Store {
-    /// `$PAPER_RS_HOME`, else `~/Documents/paper-rs`.
+    /// `$PLAY_HOME`, else `~/Documents/Play Projects`.
     pub fn default_root() -> PathBuf {
-        if let Some(p) = std::env::var_os("PAPER_RS_HOME") {
+        if let Some(p) = std::env::var_os("PLAY_HOME") {
             return PathBuf::from(p);
         }
         dirs::document_dir()
             .or_else(dirs::home_dir)
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("paper-rs")
+            .join("Play Projects")
     }
 
     pub fn open(root: impl Into<PathBuf>) -> std::io::Result<Store> {
@@ -399,7 +399,7 @@ mod tests {
     use super::*;
 
     pub fn temp_store() -> Store {
-        let root = std::env::temp_dir().join(format!("paper-rs-store-{:016x}", fastrand::u64(..)));
+        let root = std::env::temp_dir().join(format!("play-store-{:016x}", fastrand::u64(..)));
         Store::open(root).unwrap()
     }
 

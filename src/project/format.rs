@@ -11,10 +11,10 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::HashMap;
 
-pub const PROJECT_FORMAT: &str = "paper-rs-project";
-pub const PAGE_FORMAT: &str = "paper-rs-page";
-/// The single-file format of paper-rs 0.1 (`.paper-rs`), version 1. It migrates to a page.
-pub const LEGACY_FORMAT: &str = "paper-rs";
+pub const PROJECT_FORMAT: &str = "play-project";
+pub const PAGE_FORMAT: &str = "play-page";
+/// The single-file format of play 0.1 (`.play`), version 1. It migrates to a page.
+pub const LEGACY_FORMAT: &str = "play";
 
 pub const PROJECT_VERSION: u32 = 1;
 /// v1: legacy single file. v2: page file inside a project. v3: fill layers (`fills`).
@@ -34,7 +34,7 @@ impl std::fmt::Display for FormatError {
         match self {
             FormatError::Io(e) => write!(f, "I/O error: {e}"),
             FormatError::Json(e) => write!(f, "malformed file: {e}"),
-            FormatError::WrongFormat(s) => write!(f, "not a paper-rs file (format {s:?})"),
+            FormatError::WrongFormat(s) => write!(f, "not a play file (format {s:?})"),
             FormatError::TooNew { version, supported } => write!(
                 f,
                 "file version {version} is newer than this app supports ({supported})"
@@ -99,7 +99,13 @@ impl Manifest {
 
     pub fn from_json(s: &str) -> Result<Manifest, FormatError> {
         let v: Value = serde_json::from_str(s).map_err(FormatError::Json)?;
-        let v = migrate(v, PROJECT_FORMAT, PROJECT_VERSION, &[], &[])?;
+        let v = migrate(
+            v,
+            PROJECT_FORMAT,
+            PROJECT_VERSION,
+            &["paper-rs-project"],
+            &[],
+        )?;
         serde_json::from_value(v).map_err(FormatError::Json)
     }
 }
@@ -131,9 +137,9 @@ struct PageFile {
 /// Page migrations, indexed by source version: `PAGE_STEPS[0]` turns v1 into v2.
 const PAGE_STEPS: &[fn(Value) -> Value] = &[page_v1_to_v2, page_v2_to_v3];
 /// Formats accepted as older versions of a page.
-const PAGE_ALIASES: &[&str] = &[LEGACY_FORMAT];
+const PAGE_ALIASES: &[&str] = &[LEGACY_FORMAT, "paper-rs", "paper-rs-page"];
 
-/// v1 (`.paper-rs` single file) → v2 page: new format tag and a page id.
+/// v1 (`.play` single file) → v2 page: new format tag and a page id.
 fn page_v1_to_v2(mut v: Value) -> Value {
     v["format"] = json!(PAGE_FORMAT);
     if v.get("id").is_none() {
@@ -178,7 +184,7 @@ pub fn page_to_json(p: &PageData) -> String {
     serde_json::to_string_pretty(&f).expect("page serializes")
 }
 
-/// Parse a page file (or a legacy `.paper-rs` document) of any supported version.
+/// Parse a page file (or a legacy `.play` document) of any supported version.
 pub fn page_from_json(s: &str) -> Result<PageData, FormatError> {
     let v: Value = serde_json::from_str(s).map_err(FormatError::Json)?;
     let v = migrate(v, PAGE_FORMAT, PAGE_VERSION, PAGE_ALIASES, PAGE_STEPS)?;
@@ -231,6 +237,7 @@ fn migrate(
         version += 1;
         v["version"] = json!(version);
     }
+    v["format"] = json!(format);
     Ok(v)
 }
 
@@ -289,14 +296,14 @@ mod tests {
             Err(FormatError::WrongFormat(_))
         ));
         assert!(matches!(
-            page_from_json(r#"{"format":"paper-rs-page","version":99}"#),
+            page_from_json(r#"{"format":"play-page","version":99}"#),
             Err(FormatError::TooNew { version: 99, .. })
         ));
         assert!(matches!(
-            Manifest::from_json(r#"{"format":"paper-rs-page","version":1}"#),
+            Manifest::from_json(r#"{"format":"play-page","version":1}"#),
             Err(FormatError::WrongFormat(_))
         ));
-        let broken = r#"{"format":"paper-rs-page","version":2,"id":"a","name":"x","next_id":1,"root":[5],"nodes":[]}"#;
+        let broken = r#"{"format":"play-page","version":2,"id":"a","name":"x","next_id":1,"root":[5],"nodes":[]}"#;
         assert!(matches!(
             page_from_json(broken),
             Err(FormatError::Invalid(_))
@@ -305,7 +312,7 @@ mod tests {
 
     #[test]
     fn v2_fill_migrates_to_fill_layers() {
-        let v2 = r##"{"format":"paper-rs-page","version":2,"id":"a","name":"P","next_id":3,
+        let v2 = r##"{"format":"play-page","version":2,"id":"a","name":"P","next_id":3,
             "root":[1,2],"nodes":[
             {"id":1,"name":"R","type":"rect","rect":{"x":0,"y":0,"w":5,"h":5},
              "style":{"fill":"#ff0000","stroke":null,"stroke_width":1,"corner_radius":2,"opacity":1}},

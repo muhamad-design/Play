@@ -2,7 +2,7 @@
 //!
 //! Agents describe styles the way Paper's MCP server expects them: React-style camelCase CSS
 //! property maps (`{"backgroundColor": "#fff", "padding": "20px"}`) or inline `style="..."`
-//! attributes. This module maps the subset that has a paper-rs equivalent onto `Style`,
+//! attributes. This module maps the subset that has a play equivalent onto `Style`,
 //! `TextStyle`, `AutoLayout` and `LayoutChild`, reports the rest as ignored, and turns nodes
 //! back into CSS for `get_computed_styles` / `get_jsx`.
 
@@ -168,7 +168,7 @@ pub fn percent(s: &str) -> Option<f64> {
         .map(|v| v / 100.0)
 }
 
-/// 1–4 value shorthand (padding, border-radius): top/tl, right/tr, bottom/br, left/bl.
+/// 1-4 value shorthand (padding, border-radius): top/tl, right/tr, bottom/br, left/bl.
 pub fn four(s: &str, font_size: f64) -> Option<[f64; 4]> {
     let v: Vec<f64> = split_ws(s)
         .iter()
@@ -501,7 +501,7 @@ pub struct Context {
 /// What `apply` did besides changing the node.
 #[derive(Debug, Default)]
 pub struct Applied {
-    /// Properties with no effect in paper-rs (reported back to the agent).
+    /// Properties with no effect in Play (reported back to the agent).
     pub ignored: Vec<String>,
     /// Image URL to resolve and use as the top fill (resolved by the caller).
     pub image: Option<(String, ImageMode)>,
@@ -1039,7 +1039,7 @@ pub fn apply(n: &mut Node, styles: &[(String, String)], ctx: &Context) -> Applie
                 }
                 None => false,
             },
-            // Excalidraw-style hand-drawn rendering (paper-rs extensions).
+            // Excalidraw-style hand-drawn rendering (play extensions).
             "sketch" | "handDrawn" => {
                 if matches!(lower.as_str(), "true" | "1" | "on" | "yes") {
                     rough_mut(n);

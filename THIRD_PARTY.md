@@ -1,6 +1,6 @@
 # Third-party code and assets
 
-paper-rs is MIT OR Apache-2.0. It ports a few algorithms from MIT-licensed projects (listed
+Play is MIT OR Apache-2.0. It ports a few algorithms from MIT-licensed projects (listed
 below with their copyright notices and license text) and bundles the Inter font (SIL OFL 1.1,
 `assets/fonts/OFL.txt`). Figma and Paper are proprietary: only their *behavior* was studied
 (`analysis/FIGMA_NOTES.md`, `analysis/PAPER_ARCHITECTURE.md`), and no code, shaders, icons or
@@ -12,7 +12,7 @@ assets from them are used.
 |---|---|---|---|
 | [rough.js](https://github.com/rough-stuff/rough) 4.6.4 | Copyright (c) 2019 Preet Shihn | Seeded RNG, `_line` / `_doubleLine`, curves, ellipses, `svgPath`, solid / hachure / cross-hatch / zigzag / dots fills, generator option handling. Verified against rough.js output (`tests/fixtures/rough/`). | `src/render/rough.rs` |
 | [hachure-fill](https://github.com/pshihn/hachure-fill) 0.5.2 | Copyright (c) 2023 Preet Shihn | Scan-line hachure algorithm | `src/render/rough.rs` |
-| [points-on-curve](https://github.com/pshihn/bezier-points) 0.2.0, [points-on-path](https://github.com/pshihn/points-on-path) 0.2.1 | Copyright (c) 2020 Preet Shihn | Bezier flattening by flatness, Ramer–Douglas–Peucker, `curveToBezier`, path point sets | `src/render/rough.rs` |
+| [points-on-curve](https://github.com/pshihn/bezier-points) 0.2.0, [points-on-path](https://github.com/pshihn/points-on-path) 0.2.1 | Copyright (c) 2020 Preet Shihn | Bezier flattening by flatness, Ramer-Douglas-Peucker, `curveToBezier`, path point sets | `src/render/rough.rs` |
 | [Excalidraw](https://github.com/excalidraw/excalidraw) | Copyright (c) 2020 Excalidraw | Element → rough options (`adjustRoughness`, dash patterns, fill weights), binding gap and fixed-point rules, elbow-arrow grid/A* router with its segment-count heuristic, elbow corner rounding, arrowhead geometry, laser trail decay constants, sticky-note sizing, `.excalidraw` / `.excalidrawlib` formats | `src/render/rough.rs`, `src/connector.rs`, `src/editor/whiteboard.rs`, `src/io/excalidraw.rs` |
 
 Each ported module starts with a comment naming its source.
@@ -54,5 +54,5 @@ SOFTWARE.
 
 ## Fonts
 
-Inter 4.1 by Rasmus Andersson — SIL Open Font License 1.1 (`assets/fonts/OFL.txt`). Regular,
+Inter 4.1 by Rasmus Andersson - SIL Open Font License 1.1 (`assets/fonts/OFL.txt`). Regular,
 Medium, SemiBold, Bold, Italic and Bold Italic are bundled unmodified.

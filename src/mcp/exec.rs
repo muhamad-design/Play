@@ -41,7 +41,7 @@ pub trait Host {
 }
 
 /// A host without a window: an editor plus a project session. Used by tests and anything
-/// that wants to drive paper-rs headlessly.
+/// that wants to drive play headlessly.
 pub struct SessionHost {
     pub ed: Editor,
     pub session: Session,
@@ -324,7 +324,7 @@ fn find_project(store: &Store, key: &str) -> Result<PathBuf, String> {
 fn check_file(host: &mut dyn Host, a: &Args) -> Result<(), String> {
     if !host.canvas_open() {
         return Err(
-            "No project is open in paper-rs (the home screen is showing). Call list_resources \
+            "No project is open in Play (the home screen is showing). Call list_resources \
              and open_file, or create_file then open_file."
                 .into(),
         );
@@ -859,14 +859,14 @@ fn font_info(a: &Args) -> ToolResult {
 fn guide(a: &Args) -> ToolResult {
     let t = a.req_str("topic")?;
     let s = match t {
-        "paper-rs-mcp-instructions" | "paper-mcp-instructions" | "instructions" => {
+        "play-mcp-instructions" | "paper-mcp-instructions" | "instructions" => {
             tools::GUIDE_INSTRUCTIONS
         }
         "html" | "write_html" => tools::GUIDE_HTML,
         "whiteboard" | "excalidraw" => tools::GUIDE_WHITEBOARD,
         _ => {
             return Err(format!(
-                "unknown topic `{t}`; topics: paper-rs-mcp-instructions, html, whiteboard"
+                "unknown topic `{t}`; topics: play-mcp-instructions, html, whiteboard"
             ));
         }
     };
@@ -1126,7 +1126,7 @@ fn export_pdf(host: &mut dyn Host, a: &Args) -> ToolResult {
         None => {
             let dir = out_dir(a);
             std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-            unique_path(&dir, project_name.as_deref().unwrap_or("paper-rs"), "pdf")
+            unique_path(&dir, project_name.as_deref().unwrap_or("play"), "pdf")
         }
     };
     let spec = Spec {

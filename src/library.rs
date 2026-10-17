@@ -6,7 +6,7 @@ use crate::model::{Color, Document, Node, NodeId, NodeKind};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
-pub const FORMAT: &str = "paper-rs-library";
+pub const FORMAT: &str = "play-library";
 pub const VERSION: u32 = 1;
 pub const FILE: &str = "library.json";
 
@@ -95,8 +95,11 @@ impl Library {
         let mut lib = std::fs::read_to_string(path)
             .ok()
             .and_then(|s| serde_json::from_str::<Library>(&s).ok())
-            .filter(|l| l.format == FORMAT && l.version <= VERSION)
+            .filter(|l| {
+                (l.format == FORMAT || l.format == "paper-rs-library") && l.version <= VERSION
+            })
             .unwrap_or_else(starter);
+        lib.format = FORMAT.into();
         lib.path = Some(path.to_path_buf());
         lib
     }
@@ -258,7 +261,7 @@ mod tests {
 
     #[test]
     fn save_load_roundtrip_and_starter() {
-        let dir = std::env::temp_dir().join(format!("paper-rs-lib-{:016x}", fastrand::u64(..)));
+        let dir = std::env::temp_dir().join(format!("play-lib-{:016x}", fastrand::u64(..)));
         let path = dir.join(FILE);
         let lib = Library::load(&path);
         assert!(lib.items.len() >= 5, "starter shapes on first use");

@@ -1,4 +1,4 @@
-//! paper-rs: a native infinite canvas for planning, working and sketching.
+//! Play: a native infinite canvas for planning, working and sketching.
 
 pub mod app;
 pub mod assets;
